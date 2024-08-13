@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+
+{% block title %}
+    Избери приказка
+{% endblock %}
+
+{% block main_content %}
+    <ul>
+    {% for text in texts %}
+        <li><a href="{% url 'teacher-reader' slug=text.slug %}">{{ text.title }}</a></li>
+    
+    {% endfor %}
+    </ul>
+{% endblock %}

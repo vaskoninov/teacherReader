@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %} {{ title }} {% endblock %}
+<!-- Display recognized text -->
+{% block main_content %}
+    <h1 class="text-center"><a href="{% url 'teacher-reader' slug=slug %}">Начало</a></h1>
+    <div class="d-flex container justify-content-end">
+        <div class="row">
+            <p>Успешно прочетени думи: <strong>{{ guessed_words }}</strong></p>
+            <p>Тази дума прочетена: <strong id="numberOfWords">0</strong></p>
+        </div>
+    </div>
+    <div class="container text-center">
+        <h1>{{ title }}</h1>
+        <div class="row align-items-center">
+            <div class="col">
+                <form action="{% url 'previous-word' slug=slug%}">
+                    {% csrf_token %}
+                    <button type="submit">Предишна дума</button>
+                </form>
+            </div>
+            <div class="col">
+                <div class="container text-center">
+                    <div class="row align-items-center">
+                        <div class="col">
+                            <h2><strong id="currentWord">{{ word }}</strong></h2>
+                            <p id="recognized-text"></p>
+                        </div>
+                        <div class="col">
+                            <button id="speech-btn" onclick="toggleRecognition()">Започни да четеш</button>
+                        </div>
+                        <div class="col">
+                            <button id="reading-btn" onclick="readWord()">Прочети вместо мен</button>
+                            <audio id="audio-player" controls style="display: none;"></audio>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col">
+                <form action="{% url 'next-word' slug=slug%}">
+                    {% csrf_token %}
+                    <input type="hidden" name="pk" value="{{ pk }}">
+                    <button type="submit">Следваща дума</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/scripts.js' %}">
+
+
+    </script>
+{% endblock %}

@@ -1,43 +1,84 @@
+from collections import deque
 from io import BytesIO
 
 from django.http import HttpResponse
-from django.views.generic import TemplateView, View
+from django.views.generic import TemplateView, View, ListView
 from gtts import gTTS
 
-from teacherReader.teacher.helpers import create_deque_text
+from teacherReader.teacher.fairytale import FairyTale
+from teacherReader.teacher.helpers import prepare_fairy_tale
+from teacherReader.teacher.models import FairyTaleText
 
-WORD_DEQUE = create_deque_text()
+
+class FairyTaleChooser(ListView):
+    template_name = 'chooser.html'
+    model = FairyTaleText
+
+    context_object_name = 'texts'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+
+        # To clean possible leftovers in Session
+        tale = FairyTale(self.request)
+        tale.clear_fairytale()
+        return context
 
 
 # Create your views here.
 
 class TeacherReaderView(TemplateView):
-    template_name = 'index.html'
+    template_name = 'fairytale.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        first_word = WORD_DEQUE[0]
+
+        # Prepare the new tale
+        tale = FairyTale(self.request)
+        tale.clear_fairytale()
+
+        # Load the tale and prepare learning
+        current_fairytale = prepare_fairy_tale(slug=self.kwargs['slug'])
+        tale.add_fairytale(current_fairytale['text'])
+        tale.previous_words = []
+        first_word = tale.fairytale[0]
+
+        # Send data to template
+        self.request.session['title'] = current_fairytale['title']
         context["word"] = first_word
+        context['title'] = self.request.session['title']
+        context['guessed_words'] = self.request.session['guessed_words'] = 0
+        context['slug'] = self.kwargs['slug']
+
         return context
 
 
 class NextWordView(TemplateView):
-    template_name = 'index.html'
+    template_name = 'fairytale.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        WORD_DEQUE.rotate(-1)
-        context["word"] = WORD_DEQUE[0]
+        tale = FairyTale(self.request)
+
+        context["word"] = tale.next_word()
+        context['title'] = self.request.session['title']
+        self.request.session['guessed_words'] += 1
+        context['guessed_words'] = self.request.session['guessed_words']
+        context['slug'] = self.kwargs['slug']
         return context
 
 
 class PreviousWordView(TemplateView):
-    template_name = 'index.html'
+    template_name = 'fairytale.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        WORD_DEQUE.rotate(1)
-        context["word"] = WORD_DEQUE[0]
+        tale = FairyTale(self.request)
+
+        context["word"] = tale.previous_word()
+        print(tale.previous_word())
+        context['title'] = self.request.session['title']
+        context['slug'] = self.kwargs['slug']
         return context
 
 
