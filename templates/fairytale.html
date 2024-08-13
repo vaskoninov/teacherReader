@@ -4,6 +4,8 @@
 {% block title %} {{ title }} {% endblock %}
 <!-- Display recognized text -->
 {% block main_content %}
+    <a class="btn btn-primary" href="{% url 'fairy-tale-chooser' %}">Започни от самото начало</a>
+    <a class="btn btn-secondary" href="{% url 'new-fairy-tale' %}">Избери нова приказка</a>
     <h1 class="text-center"><a href="{% url 'teacher-reader' slug=slug %}">Начало</a></h1>
     <div class="d-flex container justify-content-end">
         <div class="row">

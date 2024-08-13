@@ -25,6 +25,12 @@ class FairyTaleChooser(ListView):
         return context
 
 
+class NewFairyTale(ListView):
+    template_name = 'chooser.html'
+    model = FairyTaleText
+    context_object_name = 'texts'
+
+
 # Create your views here.
 
 class TeacherReaderView(TemplateView):
@@ -35,7 +41,6 @@ class TeacherReaderView(TemplateView):
 
         # Prepare the new tale
         tale = FairyTale(self.request)
-        tale.clear_fairytale()
 
         # Load the tale and prepare learning
         current_fairytale = prepare_fairy_tale(slug=self.kwargs['slug'])
@@ -47,7 +52,8 @@ class TeacherReaderView(TemplateView):
         self.request.session['title'] = current_fairytale['title']
         context["word"] = first_word
         context['title'] = self.request.session['title']
-        context['guessed_words'] = self.request.session['guessed_words'] = 0
+        context['guessed_words'] = self.request.session.get('guessed_words', 0)
+        self.request.session['guessed_words'] = context['guessed_words']
         context['slug'] = self.kwargs['slug']
 
         return context

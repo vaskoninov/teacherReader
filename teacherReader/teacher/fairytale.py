@@ -54,4 +54,7 @@ class FairyTale:
             del self.session['fairytale']
         if 'previous_words' in self.session:
             del self.session['previous_words']
+        if 'guessed_words' in self.session:
+            del self.session['guessed_words']
         self.session.modified = True
+
