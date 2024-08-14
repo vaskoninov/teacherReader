@@ -26,7 +26,7 @@ class FairyTaleChooser(ListView):
 
 
 class NewFairyTale(ListView):
-    template_name = 'chooser.html'
+    template_name = 'choose_another_tale.html'
     model = FairyTaleText
     context_object_name = 'texts'
 
@@ -38,7 +38,6 @@ class TeacherReaderView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-
         # Prepare the new tale
         tale = FairyTale(self.request)
 

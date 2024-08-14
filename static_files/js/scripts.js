@@ -20,7 +20,8 @@ if (!('webkitSpeechRecognition' in window)) {
         document.getElementById('speech-btn').innerText = "Започни да четеш";
 
         if (document.getElementById('currentWord').innerText.toLowerCase() === document.getElementById('recognized-text').innerText) {
-            alert('Добра работа!');
+            // alert('Добра работа!');
+            guessedWordsCount()
             getCorrectWordsNumber();
             enableButton();
             goodAlert();
@@ -91,4 +92,11 @@ function enableButton() {
 function goodAlert() {
     const divAlert = document.getElementById('goodAlert')
     divAlert.style.display = 'block'
+}
+
+function guessedWordsCount() {
+    const guessedWord = document.getElementById('guessedWords')
+    if (guessedWord.innerText.toString() === '0') {
+        guessedWord.innerText = '1'
+    }
 }
