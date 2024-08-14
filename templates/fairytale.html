@@ -4,52 +4,67 @@
 {% block title %} {{ title }} {% endblock %}
 <!-- Display recognized text -->
 {% block main_content %}
-    <a class="btn btn-primary" href="{% url 'fairy-tale-chooser' %}">Започни от самото начало</a>
-    <a class="btn btn-secondary" href="{% url 'new-fairy-tale' %}">Избери нова приказка</a>
-    <h1 class="text-center"><a href="{% url 'teacher-reader' slug=slug %}">Начало</a></h1>
-    <div class="d-flex container justify-content-end">
-        <div class="row">
-            <p>Успешно прочетени думи: <strong>{{ guessed_words }}</strong></p>
-            <p>Тази дума прочетена: <strong id="numberOfWords">0</strong></p>
+
+
+    <div class="container-fluid">
+        <!-- First Row: Displaying words count -->
+        <div class="row justify-content-end align-items-center mb-3">
+            <div class="col-auto">
+                <p>Успешно прочетени думи: <strong>{{ guessed_words }}</strong></p>
+            </div>
+            <div class="col-auto">
+                <p>Тази дума прочетена: <strong id="numberOfWords">0</strong></p>
+            </div>
         </div>
-    </div>
-    <div class="container text-center">
-        <h1>{{ title }}</h1>
-        <div class="row align-items-center">
-            <div class="col">
-                <form action="{% url 'previous-word' slug=slug%}">
+        <div class="d-flex justify-content-center">
+            <div id="goodAlert" class="alert alert-success" role="alert" style="display: none">
+                <h4 class="alert-heading">Чудесно!</h4>
+                <p>Ти успя да прочетеш думата "{{ word }}"!</p>
+                <hr>
+                <p class="mb-0">Може да потренираш с нея или да преминеш на следващата!</p>
+            </div>
+        </div>
+        <!-- Second Row: Buttons and Card Layout -->
+        <div class="row text-center align-items-center">
+            <!-- Previous Word Button -->
+            <div class="col-md-3 mb-3 mb-md-0">
+                <form action="{% url 'previous-word' slug=slug %}">
                     {% csrf_token %}
-                    <button type="submit">Предишна дума</button>
+                    <button class="btn btn-info w-100" type="submit">Предишна дума</button>
                 </form>
             </div>
-            <div class="col">
-                <div class="container text-center">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h2><strong id="currentWord">{{ word }}</strong></h2>
-                            <p id="recognized-text"></p>
-                        </div>
-                        <div class="col">
-                            <button id="speech-btn" onclick="toggleRecognition()">Започни да четеш</button>
-                        </div>
-                        <div class="col">
-                            <button id="reading-btn" onclick="readWord()">Прочети вместо мен</button>
-                            <audio id="audio-player" controls style="display: none;"></audio>
-                        </div>
+
+            <!-- Card with Word Details -->
+            <div class="col-md-6 mb-3 mb-md-0">
+                <div class="card">
+                    <div class="card-header">
+                        <a href="{% url 'teacher-reader' slug=slug %}">
+                            <h1>{{ title }}</h1>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title"><strong id="currentWord">{{ word }}</strong></h5>
+                        <p id="recognized-text"></p>
+                        <button class="btn btn-primary" id="speech-btn" onclick="toggleRecognition()">Започни да четеш
+                        </button>
+                        <button class="btn btn-secondary" id="reading-btn" onclick="readWord()">Прочети вместо мен
+                        </button>
+                        <audio id="audio-player" controls style="display: none;"></audio>
                     </div>
                 </div>
-
-
             </div>
-            <div class="col">
-                <form action="{% url 'next-word' slug=slug%}">
+
+            <!-- Next Word Button -->
+            <div class="col-md-3">
+                <form action="{% url 'next-word' slug=slug %}">
                     {% csrf_token %}
                     <input type="hidden" name="pk" value="{{ pk }}">
-                    <button type="submit">Следваща дума</button>
+                    <button id="nextWord" class="btn btn-success w-100" type="submit" disabled>Следваща дума</button>
                 </form>
             </div>
         </div>
     </div>
+
 
 {% endblock %}
 

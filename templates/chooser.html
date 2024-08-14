@@ -6,10 +6,13 @@
 {% endblock %}
 
 {% block main_content %}
-    <ul>
-    {% for text in texts %}
-        <li><a href="{% url 'teacher-reader' slug=text.slug %}">{{ text.title }}</a></li>
-    
-    {% endfor %}
-    </ul>
+    <div class="container-fluid">
+        <ul class="list-group">
+            {% for text in texts %}
+                <li class="list-group-item list-group-item-action"><a
+                        href="{% url 'teacher-reader' slug=text.slug %}">{{ text.title }}</a></li>
+
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}

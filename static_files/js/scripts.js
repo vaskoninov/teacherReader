@@ -21,7 +21,9 @@ if (!('webkitSpeechRecognition' in window)) {
 
         if (document.getElementById('currentWord').innerText.toLowerCase() === document.getElementById('recognized-text').innerText) {
             alert('Добра работа!');
-            getCorrectWordsNumber()
+            getCorrectWordsNumber();
+            enableButton();
+            goodAlert();
         }
 
     };
@@ -76,4 +78,17 @@ function getCorrectWordsNumber() {
     ++numberWords
     document.getElementById("numberOfWords").innerText = numberWords.toString()
 
+}
+
+function enableButton() {
+    console.log('Condition met, enabling button');
+    const button = document.getElementById('nextWord')
+    button.disabled = false;
+    console.log('Button disabled state:', button.disabled);
+}
+
+
+function goodAlert() {
+    const divAlert = document.getElementById('goodAlert')
+    divAlert.style.display = 'block'
 }
