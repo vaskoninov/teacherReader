@@ -1,7 +1,8 @@
+import json
 from collections import deque
 from io import BytesIO
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.generic import TemplateView, View, ListView
 from gtts import gTTS
 
@@ -67,7 +68,7 @@ class NextWordView(TemplateView):
 
         context["word"] = tale.next_word()
         context['title'] = self.request.session['title']
-        self.request.session['guessed_words'] += 1
+        # self.request.session['guessed_words'] += 1
         context['guessed_words'] = self.request.session['guessed_words']
         context['slug'] = self.kwargs['slug']
         return context
@@ -103,3 +104,16 @@ class ReadTheWord(View):
         response = HttpResponse(audio_fp, content_type='audio/mpeg')
         response['Content-Disposition'] = 'inline; filename="speech.mp3"'
         return response
+
+
+class UpdateGuessedWordsSession(View):
+
+    def post(self, request):
+        print("Received POST data:", request.POST)
+        data = json.loads(request.body)
+        if data.get('update-words'):
+            guessed_words = request.session.get('guessed_words', 0)
+            request.session['guessed_words'] = guessed_words + 1
+            request.session.modified = True
+            return JsonResponse({'status': 'success', 'guessed_words': request.session['guessed_words']})
+        return JsonResponse({'status': 'failed'}, status=400)

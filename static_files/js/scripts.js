@@ -21,10 +21,11 @@ if (!('webkitSpeechRecognition' in window)) {
 
         if (document.getElementById('currentWord').innerText.toLowerCase() === document.getElementById('recognized-text').innerText) {
             // alert('Добра работа!');
-            guessedWordsCount()
+            // guessedWordsCount()
             getCorrectWordsNumber();
             enableButton();
             goodAlert();
+            increaseSessionGuessedWords()
         }
 
     };
@@ -94,9 +95,35 @@ function goodAlert() {
     divAlert.style.display = 'block'
 }
 
-function guessedWordsCount() {
-    const guessedWord = document.getElementById('guessedWords')
-    if (guessedWord.innerText.toString() === '0') {
-        guessedWord.innerText = '1'
+// function guessedWordsCount() {
+//     const guessedWord = document.getElementById('guessedWords')
+//     if (guessedWord.innerText.toString() === '0') {
+//         guessedWord.innerText = '1'
+//     }
+// }
+
+
+function increaseSessionGuessedWords() {
+    const csrfToken = document.cookie.split('; ').find(row => row.startsWith('csrftoken')).split('=')[1];
+    const numberOfWords = document.getElementById('numberOfWords')
+    if (Number(numberOfWords.innerText) === 1) {
+        const guessed = document.getElementById('guessedWords')
+        guessed.innerText = (Number(guessed.innerText) + 1).toString()
+
+        fetch('/update/', {
+            method: "POST",
+            headers: {
+                "Content-type": 'application/json',
+                "X-CSRFToken": csrfToken,
+            },
+            body: JSON.stringify({'update-words': true})
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Updated:", data)
+            })
+            .catch(error => {
+                console.log('Error:', error)
+            })
     }
 }

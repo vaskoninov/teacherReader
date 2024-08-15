@@ -9,4 +9,5 @@ urlpatterns = [
     path('<slug:slug>/next-word/', views.NextWordView.as_view(), name='next-word'),
     path('<slug:slug>/previous-word/', views.PreviousWordView.as_view(), name='previous-word'),
     path('read-word/', views.ReadTheWord.as_view(), name='read-word'),
+    path('update/', views.UpdateGuessedWordsSession.as_view(), name='update-session'),
 ]
