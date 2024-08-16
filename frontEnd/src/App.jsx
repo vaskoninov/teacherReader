@@ -1,25 +1,44 @@
-import {useEffect, useState} from 'react'
-
 import './App.css'
 import TaleList from "./components/TalesList.jsx";
-import * as services from "./services/services.js";
+import {TaleProvider} from "./components/TaleContext.jsx";
+import {createBrowserRouter, Outlet, RouterProvider} from "react-router-dom";
+import TaleReading from "./components/TaleReading.jsx";
+import AppNavigation from "./components/AppNavigation.jsx";
+
+
+const Layout = () => {
+    return (
+        <>
+            <AppNavigation/>
+            <Outlet/>
+        </>
+    )
+}
+
+
+const router = createBrowserRouter([
+        {
+            element: <Layout/>,
+            children:
+                [{
+                    path: '/',
+                    element: <TaleList/>
+                },
+                    {
+                        path: '/:slug',
+                        element: <TaleReading/>
+                    }]
+        }
+    ]
+)
 
 function App() {
 
-    const [tales, setTales] = useState([])
-
-    useEffect(() => {
-        services.getTales()
-            .then(data => setTales(data))
-            .catch(error => console.log(error))
-    }, []);
-
-
     return (
 
-
-        <TaleList tales={tales}/>
-
+        <TaleProvider>
+            <RouterProvider router={router}/>
+        </TaleProvider>
 
     )
 }

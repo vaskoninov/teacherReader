@@ -1,12 +1,14 @@
-import {useEffect, useState} from "react";
-import * as services from "../services/services.js";
+
 import TaleComponent from "./TaleComponent.jsx";
+import {useTales} from "./TaleContext.jsx";
 
-const TaleList = ({tales}) => {
 
+const TaleList = () => {
+    const {tales} = useTales()
 
     return (
         <div>
+
             <h1>Налични приказки</h1>
             <ul className="list-group">
                 {tales.map(tale => {

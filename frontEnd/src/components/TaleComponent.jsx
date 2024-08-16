@@ -1,3 +1,5 @@
+import {Link} from "react-router-dom";
+
 const TaleComponent = ({tale}) => {
 
     return (
@@ -6,10 +8,10 @@ const TaleComponent = ({tale}) => {
                 <div className="card">
                     <div className="card-body">
                         <h3 className="card-title">{tale.title}
-                            {`- приказка от ${tale.author}` ? tale.author : null}
+                            {tale.author ? ` - приказка от ${tale.author}` : null}
                         </h3>
                         <p className="card-text lead">{`${tale.text.substring(0, 100)} ...`}</p>
-
+                        <Link to={`/${tale.slug}`} className="btn btn-primary">Започни да четеш</Link>
                     </div>
                 </div>
             </li>
