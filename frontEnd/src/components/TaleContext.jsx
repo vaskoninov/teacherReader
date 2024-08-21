@@ -6,6 +6,11 @@ const TaleContext = createContext();
 
 export const TaleProvider = ({children}) => {
     const [tales, setTales] = useState([])
+    const [wordCount, setWordCount] = useState(0)
+
+    const handleWordCount = () => {
+        setWordCount(wordCount + 1)
+    }
 
     useEffect(() => {
         services.getTales()
@@ -14,7 +19,7 @@ export const TaleProvider = ({children}) => {
     }, []);
 
     return (
-        <TaleContext.Provider value={{tales}}>
+        <TaleContext.Provider value={{tales, wordCount, handleWordCount}}>
             {children}
         </TaleContext.Provider>
     )

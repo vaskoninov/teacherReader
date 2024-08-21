@@ -5,6 +5,7 @@ import {toggleRecognition, readWord} from '../services/speechRecognition.js'
 import WordOnFocus from "./wordOnFocus.jsx";
 import TaleHeader from "./TaleHeader.jsx";
 import TaleNavigation from "./TaleNavigation.jsx";
+import WordCount from "./WordCount.jsx";
 
 
 const TaleReading = () => {
@@ -12,6 +13,7 @@ const TaleReading = () => {
     const {tales} = useTales()
     const [index, setIndex] = useState(0)
     const [isEnabled, setIsEnabled] = useState(true)
+    const {wordCount, handleWordCount} = useTales()
 
     const tale = tales.find(tale => tale.slug === slug)
 
@@ -19,7 +21,7 @@ const TaleReading = () => {
         return <div>Tale not found or still loading...</div>;
     }
 
-    const words = tale.text.split(' ').map(word => word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,""))
+    const words = tale.text.split(' ').map(word => word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, ""))
     const word = words[index]
 
     function nextWord() {
@@ -45,8 +47,9 @@ const TaleReading = () => {
 
     return (
         <div className="container-fluid">
+            <WordCount count={wordCount}/>
             <div className="row text-center align-items-center">
-                <TaleNavigation direction={"previous"} onClick={previousWord} label={"Предишна дума"} />
+                <TaleNavigation direction={"previous"} onClick={previousWord} label={"Предишна дума"}/>
 
                 <div className="col-md-6 mb-3 mb-md-0">
                     <div className="card">
@@ -68,7 +71,10 @@ const TaleReading = () => {
                         </div>
                     </div>
                 </div>
-                <TaleNavigation direction={"next"} onClick={nextWord} label={"Следваща дума"} disabled={isEnabled}/>
+                <TaleNavigation direction={"next"} onClick={() => {
+                    nextWord();
+                    handleWordCount()
+                }} label={"Следваща дума"} disabled={isEnabled}/>
 
             </div>
         </div>

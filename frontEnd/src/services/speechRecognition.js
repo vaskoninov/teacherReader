@@ -2,10 +2,11 @@ let recognition;
 let recognizing = false;
 let correct_word = false;
 
-if (!('webkitSpeechRecognition' in window)) {
+if (!('webkitSpeechRecognition' in window )) {
     alert("Your browser doesn't support the Web Speech API. Please try this in Chrome.");
 } else {
-    recognition = new webkitSpeechRecognition();
+    const SpeechRecognition = window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
     recognition.continuous = true;  // Keep recognizing speech until stopped
     recognition.interimResults = true;  // Show interim results while the user is speaking
     recognition.lang = 'bg-BG';  // Set the language
